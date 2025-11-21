@@ -1,0 +1,9 @@
+# Optional dependencies for Agent Factory Warehouse
+# Core functionality works without any dependencies
+
+# For YAML configuration support
+pyyaml>=6.0
+
+# For development and testing (optional)
+pytest>=7.0.0
+pytest-cov>=4.0.0
