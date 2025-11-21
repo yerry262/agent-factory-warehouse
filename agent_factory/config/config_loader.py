@@ -1,9 +1,14 @@
 """Configuration loader for loading agent and factory configurations."""
 
 import json
-import yaml
 from typing import Dict, Any, Optional
 from pathlib import Path
+
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
 
 
 class ConfigLoader:
@@ -65,12 +70,11 @@ class ConfigLoader:
         Returns:
             Configuration dictionary
         """
-        try:
-            with open(file_path, 'r') as f:
-                return yaml.safe_load(f)
-        except NameError:
-            # yaml module not available
+        if not YAML_AVAILABLE:
             raise ImportError("PyYAML is required to load YAML files. Install it with: pip install pyyaml")
+        
+        with open(file_path, 'r') as f:
+            return yaml.safe_load(f)
     
     @staticmethod
     def load_from_dict(config_dict: Dict[str, Any]) -> Dict[str, Any]:
@@ -102,11 +106,10 @@ class ConfigLoader:
             with open(file_path, 'w') as f:
                 json.dump(config, f, indent=2)
         elif format in ["yaml", "yml"]:
-            try:
-                with open(file_path, 'w') as f:
-                    yaml.dump(config, f, default_flow_style=False)
-            except NameError:
+            if not YAML_AVAILABLE:
                 raise ImportError("PyYAML is required to save YAML files")
+            with open(file_path, 'w') as f:
+                yaml.dump(config, f, default_flow_style=False)
         else:
             raise ValueError(f"Unsupported format: {format}")
     

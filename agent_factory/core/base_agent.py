@@ -67,7 +67,7 @@ class BaseAgent(ABC):
         Returns:
             True if input is valid, False otherwise
         """
-        if not task or not isinstance(task, str):
+        if task is None or not isinstance(task, str):
             return False
         if context is not None and not isinstance(context, dict):
             return False
