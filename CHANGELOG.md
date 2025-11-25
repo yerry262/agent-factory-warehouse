@@ -5,6 +5,13 @@ All notable changes to Agent Factory Warehouse will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+**Smart Contracts:**
+- **SolidityMaster** - Expert Solidity smart contract development, auditing, and debugging agent. Specializes in writing secure smart contracts, identifying vulnerabilities, gas optimization, and comprehensive testing. Includes deep knowledge of DeFi protocols, security patterns, and common attack vectors.
+
 ## [1.0.0] - 2025-11-24
 
 ### 🎉 Initial Release

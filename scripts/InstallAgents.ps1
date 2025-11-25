@@ -70,7 +70,8 @@ $AvailableCategories = @(
     "Testing",
     "Validation",
     "GitSync",
-    "BuildAutomation"
+    "BuildAutomation",
+    "SmartContracts"
 )
 
 function Show-AgentList {

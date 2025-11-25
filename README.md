@@ -81,6 +81,16 @@ C:\path\to\agent-factory-warehouse\scripts\InstallAgents.ps1 -TargetRepo "C:\pat
 
 ---
 
+### Smart Contracts
+
+| Agent | Description | Key Tools |
+|-------|-------------|-----------|
+| **SolidityMaster** | Expert Solidity development, auditing, and debugging | `codebase`, `edit/editFiles`, `runCommands`, `runTests`, `problems`, `fetch` |
+
+**Use when:** Writing smart contracts, auditing for security, debugging Solidity code, gas optimization
+
+---
+
 ## 🎯 Agent Workflows
 
 Agents are designed to work together with handoff functionality:
@@ -133,8 +143,9 @@ agent-factory-warehouse/
 │   │   └── CodeValidator.agent.md
 │   ├── GitSync/              # Version control agents
 │   │   └── GitSync.agent.md
-│   └── BuildAutomation/      # Build and CI/CD agents
-│       └── RegressionBuilder.agent.md
+│   ├── BuildAutomation/      # Build and CI/CD agents
+│   │   └── RegressionBuilder.agent.md
+│   └── SmartContracts/       # Solidity smart contract development
 ├── templates/                 # Agent templates and examples
 │   ├── BasicAgentTemplate.agent.md
 │   ├── ReadOnlyAgentTemplate.agent.md
