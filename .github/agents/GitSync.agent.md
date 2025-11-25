@@ -273,6 +273,31 @@ Common git errors and solutions:
 - **Debug:** After fixing bugs, use GitSync to commit
 - **CodeReviewer:** Review changes before finalizing commits
 
+## Multi-Repo Navigation (New Learning)
+
+When working in a directory containing multiple repositories, always:
+- Enter the target repo directory.
+- Add, commit, and push changes.
+- Immediately back out to the parent directory using `cd ../` before entering the next repo.
+- Repeat for each repo individually.
+- Do not run add/commit/push for the same repo multiple times in a row. Always change directories after each push.
+
+### Example Workflow
+```powershell
+cd repo1
+# git operations
+cd ../
+cd repo2
+# git operations
+cd ../
+# Repeat for all repos
+```
+
+### Best Practices
+- Always confirm your current working directory before running git commands.
+- After pushing changes, use `cd ../` to return to the parent directory.
+- Only add/commit/push in the intended repo, never repeat for the same repo unless new changes are made.
+
 ## Remember
 
 - Always work on feature branches for new development
