@@ -63,16 +63,15 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = Split-Path -Parent $ScriptDir
 $AgentsDir = Join-Path $RepoRoot "agents"
 
-# Available categories
-$AvailableCategories = @(
-    "Planning",
-    "Debugging",
-    "Testing",
-    "Validation",
-    "GitSync",
-    "BuildAutomation",
-    "SmartContracts"
-)
+# Auto-discover available categories from agents directory
+$AvailableCategories = @()
+if (Test-Path $AgentsDir) {
+    $AvailableCategories = Get-ChildItem -Path $AgentsDir -Directory | Select-Object -ExpandProperty Name
+}
+
+if ($AvailableCategories.Count -eq 0) {
+    Write-Warning "No agent categories found in $AgentsDir"
+}
 
 function Show-AgentList {
     Write-Host "`n🏭 Agent Factory Warehouse - Available Agents`n" -ForegroundColor Cyan

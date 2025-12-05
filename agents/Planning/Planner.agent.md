@@ -1,11 +1,11 @@
 ---
 description: "Generate detailed implementation plans without making code changes"
 name: "Planner"
-tools: ['codebase', 'search', 'usages', 'fetch', 'githubRepo', 'problems']
+tools: ['search', 'usages', 'problems', 'fetch', 'githubRepo', 'extensions']
 model: "Claude Sonnet 4"
 handoffs:
   - label: "Start Implementation"
-    agent: "agent"
+    agent: "GameBuilder"
     prompt: "Implement the plan outlined above"
     send: false
   - label: "Review Plan"

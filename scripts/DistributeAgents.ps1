@@ -75,15 +75,15 @@ if (-not $WorkspaceRoot) {
     $WorkspaceRoot = Split-Path -Parent $AgentFactoryRoot
 }
 
-# Available categories
-$AvailableCategories = @(
-    "Planning",
-    "Debugging", 
-    "Testing",
-    "Validation",
-    "GitSync",
-    "BuildAutomation"
-)
+# Auto-discover available categories from agents directory
+$AvailableCategories = @()
+if (Test-Path $AgentsSourceDir) {
+    $AvailableCategories = Get-ChildItem -Path $AgentsSourceDir -Directory | Select-Object -ExpandProperty Name
+}
+
+if ($AvailableCategories.Count -eq 0) {
+    Write-Warning "No agent categories found in $AgentsSourceDir"
+}
 
 function Test-IsGitRepository {
     param([string]$Path)

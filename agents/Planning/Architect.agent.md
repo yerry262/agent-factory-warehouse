@@ -1,7 +1,7 @@
 ---
 description: "Design system architecture and create technical documentation"
 name: "Architect"
-tools: ['codebase', 'search', 'usages', 'fetch', 'new']
+tools: ['runTasks', 'fetch', 'todos', 'runSubagent']
 model: "Claude Sonnet 4"
 handoffs:
   - label: "Create Implementation Plan"
