@@ -1,339 +1,383 @@
-# Agent Factory Warehouse 🏭
+# Agent Factory Warehouse
 
-A curated library of VSCode custom agents for software engineering workflows. Create, customize, and deploy AI agents specialized for debugging, testing, git operations, code validation, and more.
+A powerful and extensible AI agent factory system that generates custom AI agent modules based on user requests. Build, configure, and orchestrate specialized agents for coding, debugging, planning, building, and more.
+
+## 🌟 Features
+
+- **Core Factory Engine**: Centralized system for creating and managing AI agents
+- **Pre-built Agent Templates**: Ready-to-use agents for common tasks:
+  - **CodingAgent**: Code generation, refactoring, and analysis
+  - **DebuggingAgent**: Bug detection, error analysis, and fix suggestions
+  - **PlanningAgent**: Project planning, task breakdown, and timeline estimation
+  - **BuildingAgent**: Build automation, CI/CD pipelines, and deployment
+- **Extensible Framework**: Easily create custom agent types
+- **Modular Workflows**: Orchestrate multiple agents in complex workflows
+- **Configuration Management**: Flexible configuration system with validation
+- **Agent Registry**: Dynamic registration and discovery of agent types
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/yerry262/agent-factory-warehouse.git
+cd agent-factory-warehouse
+```
+
+The system is written in Python and has minimal dependencies. No additional packages are required for basic usage.
+
+Optional dependencies:
+```bash
+pip install pyyaml  # For YAML configuration support
+```
 
 ## 🚀 Quick Start
 
-```powershell
-# Copy agents to your project
-New-Item -ItemType Directory -Path .\.github\agents -Force
-Copy-Item C:\path\to\agent-factory-warehouse\agents\Debugging\Debug.agent.md .\.github\agents\
-Copy-Item C:\path\to\agent-factory-warehouse\agents\Testing\TestRunner.agent.md .\.github\agents\
-Copy-Item C:\path\to\agent-factory-warehouse\agents\GitSync\GitSync.agent.md .\.github\agents\
+### Basic Usage
+
+```python
+from agent_factory import AgentFactory
+from agent_factory.templates import CodingAgent, DebuggingAgent
+
+# Create the factory
+factory = AgentFactory()
+
+# Register agent types
+factory.register_agent_type("coding", CodingAgent)
+factory.register_agent_type("debugging", DebuggingAgent)
+
+# Create an agent
+coder = factory.create_agent(
+    agent_type="coding",
+    name="my_coder",
+    config={"languages": ["Python", "JavaScript"]}
+)
+
+# Execute a task
+result = coder.execute(
+    task="Create a function to calculate factorial",
+    context={"language": "Python"}
+)
+
+print(result["code"])
 ```
 
-Or use the installation script:
+### Using Workflows
 
-```powershell
-C:\path\to\agent-factory-warehouse\scripts\InstallAgents.ps1 -TargetRepo "C:\path\to\your\project"
+```python
+from agent_factory.workflows import WorkflowBuilder, WorkflowManager
+
+# Create a workflow
+workflow = (WorkflowBuilder("development", "Full development cycle")
+    .add_step("planner", "Plan the project architecture")
+    .add_step("coder", "Implement the core functionality")
+    .add_step("debugger", "Review and identify issues")
+    .add_step("builder", "Set up CI/CD pipeline")
+    .build())
+
+# Execute the workflow
+workflow_manager = WorkflowManager()
+workflow_manager.create_workflow(
+    workflow["name"],
+    workflow["description"],
+    workflow["steps"]
+)
+
+result = workflow_manager.execute_workflow("development", agents)
 ```
 
-## 📋 Available Agents
+### Creating Custom Agents
 
-### Planning & Architecture
+```python
+from agent_factory import BaseAgent
+from typing import Dict, Any, List, Optional
 
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **Planner** | Generate detailed implementation plans without making code changes | `codebase`, `search`, `usages`, `fetch` |
-| **Architect** | Design system architecture and create technical documentation with diagrams | `codebase`, `search`, `fetch`, `new` |
+class MyCustomAgent(BaseAgent):
+    def get_capabilities(self) -> List[str]:
+        return ["custom_capability_1", "custom_capability_2"]
+    
+    def execute(self, task: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        # Implement your agent logic here
+        result = {
+            "success": True,
+            "task": task,
+            "output": "Custom agent output"
+        }
+        self.log_execution(task, result)
+        return result
 
-**Use when:** Starting new features, refactoring, making architectural decisions
-
----
-
-### Debugging
-
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **Debug** | Systematic debugging across any language or framework | `problems`, `testFailure`, `edit/editFiles`, `runTests` |
-
-**Use when:** Investigating bugs, test failures, runtime errors, performance issues
-
----
-
-### Testing
-
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **TestRunner** | Execute and analyze test suites across any testing framework | `runTests`, `testFailure`, `problems`, `codebase` |
-
-**Use when:** Running tests, validating changes, analyzing test failures
-
----
-
-### Code Quality
-
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **CodeValidator** | Code quality validation and standards enforcement (read-only) | `codebase`, `search`, `problems`, `changes` |
-
-**Use when:** Reviewing code quality, checking for issues, enforcing standards
-
----
-
-### Version Control
-
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **GitSync** | Git operations: commit, push, pull, branch management | `changes`, `runCommands`, `terminalLastCommand` |
-
-**Use when:** Committing changes, managing branches, pushing to remote
-
----
-
-### Build & CI/CD
-
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **RegressionBuilder** | Build execution and regression testing automation | `runCommands`, `runTests`, `runTasks`, `testFailure` |
-
-**Use when:** Running builds, checking for regressions, CI/CD validation
-
----
-
-### Smart Contracts
-
-| Agent | Description | Key Tools |
-|-------|-------------|-----------|
-| **SolidityMaster** | Expert Solidity development, auditing, and debugging | `codebase`, `edit/editFiles`, `runCommands`, `runTests`, `problems`, `fetch` |
-
-**Use when:** Writing smart contracts, auditing for security, debugging Solidity code, gas optimization
-
----
-
-## 🎯 Agent Workflows
-
-Agents are designed to work together with handoff functionality:
-
-### Full Development Workflow
-
+# Register and use your custom agent
+factory.register_agent_type("custom", MyCustomAgent)
+custom_agent = factory.create_agent("custom", "my_custom_agent")
 ```
-@Planner → @agent (implementation) → @TestRunner → @GitSync
-```
-
-1. Plan feature with **Planner**
-2. Implement with standard **@agent**
-3. Validate with **TestRunner**
-4. Commit with **GitSync**
-
-### Debug & Fix Workflow
-
-```
-@Debug → @TestRunner → @GitSync
-```
-
-1. Debug issue with **Debug**
-2. Validate fix with **TestRunner**
-3. Commit fix with **GitSync**
-
-### Quality Assurance Workflow
-
-```
-@CodeValidator → @Debug → @TestRunner → @RegressionBuilder
-```
-
-1. Review with **CodeValidator**
-2. Fix issues with **Debug**
-3. Run tests with **TestRunner**
-4. Full regression with **RegressionBuilder**
-
-## 📁 Repository Structure
-
-```
-agent-factory-warehouse/
-├── agents/                    # Production-ready agents
-│   ├── Planning/             # Planning and architecture agents
-│   │   ├── Planner.agent.md
-│   │   └── Architect.agent.md
-│   ├── Debugging/            # Debug agents
-│   │   └── Debug.agent.md
-│   ├── Testing/              # Test execution agents
-│   │   └── TestRunner.agent.md
-│   ├── Validation/           # Code quality agents
-│   │   └── CodeValidator.agent.md
-│   ├── GitSync/              # Version control agents
-│   │   └── GitSync.agent.md
-│   ├── BuildAutomation/      # Build and CI/CD agents
-│   │   └── RegressionBuilder.agent.md
-│   └── SmartContracts/       # Solidity smart contract development
-├── templates/                 # Agent templates and examples
-│   ├── BasicAgentTemplate.agent.md
-│   ├── ReadOnlyAgentTemplate.agent.md
-│   ├── FullAccessAgentTemplate.agent.md
-│   ├── ExampleDebugAgent.agent.md
-│   └── ExamplePlanningAgent.agent.md
-├── docs/                      # Documentation
-│   ├── USAGE.md              # How to use agents in your projects
-│   ├── CONTRIBUTING.md       # How to create and contribute agents
-│   └── TOOLS.md              # Complete VSCode agent tools reference
-├── scripts/                   # Utility scripts
-│   └── InstallAgents.ps1     # Automated agent installation
-├── CHANGELOG.md              # Version history and updates
-├── LICENSE                   # MIT License
-└── README.md                 # This file
-```
-
-## 🛠️ Installation Methods
-
-### Method 1: Direct Copy (Recommended)
-
-Copy specific agents to your project:
-
-```powershell
-# Create agents directory
-New-Item -ItemType Directory -Path .\.github\agents -Force
-
-# Copy specific agents
-Copy-Item C:\path\to\agent-factory-warehouse\agents\Debugging\Debug.agent.md .\.github\agents\
-Copy-Item C:\path\to\agent-factory-warehouse\agents\Testing\TestRunner.agent.md .\.github\agents\
-
-# Or copy entire categories
-Copy-Item C:\path\to\agent-factory-warehouse\agents\Debugging\*.agent.md .\.github\agents\
-
-# Or copy all agents
-Copy-Item C:\path\to\agent-factory-warehouse\agents\*\*.agent.md .\.github\agents\
-```
-
-### Method 2: Automated Script
-
-Use the installation script for easier management:
-
-```powershell
-# Install all agents
-.\scripts\InstallAgents.ps1 -TargetRepo "C:\path\to\your\project" -InstallAll
-
-# Install specific categories
-.\scripts\InstallAgents.ps1 -TargetRepo "C:\path\to\your\project" -Categories @("Debugging", "Testing", "GitSync")
-
-# Update existing agents
-.\scripts\InstallAgents.ps1 -TargetRepo "C:\path\to\your\project" -InstallAll -Force
-```
-
-### Method 3: Symbolic Links (Advanced)
-
-For automatic updates (requires admin privileges):
-
-```powershell
-New-Item -ItemType SymbolicLink `
-    -Path ".\.github\agents\Debug.agent.md" `
-    -Target "C:\path\to\agent-factory-warehouse\agents\Debugging\Debug.agent.md"
-```
-
-## 💡 Usage Examples
-
-### Planning a Feature
-
-```
-@Planner I need to add user authentication with JWT tokens
-```
-
-### Debugging an Issue
-
-```
-@Debug The application crashes when submitting the payment form
-```
-
-### Running Tests
-
-```
-@TestRunner Run all tests and provide detailed failure analysis
-```
-
-### Validating Code Quality
-
-```
-@CodeValidator Review the recent changes in src/services/ for quality issues
-```
-
-### Committing Changes
-
-```
-@GitSync Review and commit the authentication feature with appropriate message
-```
-
-### Build & Regression Testing
-
-```
-@RegressionBuilder Run full build and regression test suite
-```
-
-## 🎨 Creating Custom Agents
-
-Start with a template from `templates/`:
-
-1. Choose appropriate template (Basic, ReadOnly, or FullAccess)
-2. Copy to your project's `.github/agents/` directory
-3. Customize YAML frontmatter and instructions
-4. Test in your project
-
-See `docs/CONTRIBUTING.md` for detailed guidelines.
 
 ## 📚 Documentation
 
-- **[USAGE.md](docs/USAGE.md)** - Complete usage guide with installation methods and examples
-- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Guidelines for creating and contributing agents
-- **[TOOLS.md](docs/TOOLS.md)** - Comprehensive reference of all available VSCode agent tools
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and updates
+### Agent Templates
 
-## 🌟 Key Features
+#### CodingAgent
+Specialized in code generation, refactoring, and analysis.
 
-### Framework-Agnostic
+**Capabilities:**
+- Code generation from specifications
+- Code refactoring
+- Code quality analysis
+- Syntax checking
+- Code optimization
+- Documentation generation
+- Unit test generation
 
-All agents are designed to work across any programming language and framework. Whether you're working with JavaScript, Python, Java, C#, Go, or any other language, these agents adapt to your project.
+**Configuration:**
+```python
+config = {
+    "languages": ["Python", "JavaScript", "Java", "C++", "Go", "Rust"],
+    "style_guide": "PEP8"  # or "Google", "Airbnb", etc.
+}
+```
 
-### Language-Universal Tools
+#### DebuggingAgent
+Specialized in finding and fixing bugs, error analysis.
 
-Agents use universal debugging principles, testing patterns, and development workflows that apply regardless of your tech stack.
+**Capabilities:**
+- Error message analysis
+- Stack trace parsing
+- Bug identification
+- Fix suggestions
+- Root cause analysis
+- Debugging strategy recommendations
+- Bug tracking
 
-### Intelligent Handoffs
+**Configuration:**
+```python
+config = {
+    "strategies": ["print_debugging", "breakpoint_analysis", "log_analysis"],
+    "max_bugs_tracked": 1000
+}
+```
 
-Agents can hand off to each other, creating seamless workflows:
-- Debug → TestRunner → GitSync
-- Planner → Implementation → CodeValidator
-- RegressionBuilder → Debug (on failures)
+#### PlanningAgent
+Specialized in project planning and task breakdown.
 
-### Read-Only vs Full-Access
+**Capabilities:**
+- Project decomposition
+- Task breakdown
+- Timeline estimation
+- Resource planning
+- Dependency mapping
+- Risk assessment
+- Milestone definition
+- Roadmap creation
 
-- **Planning agents** (Planner, Architect, CodeValidator) are read-only for safety
-- **Implementation agents** (Debug) have edit capabilities
-- **Automation agents** (TestRunner, GitSync, RegressionBuilder) have execution permissions
+**Configuration:**
+```python
+config = {
+    "methodology": "agile"  # or "waterfall", "kanban", "scrum"
+}
+```
 
-### Comprehensive Tool Access
+#### BuildingAgent
+Specialized in build automation and CI/CD.
 
-Each agent has carefully selected tools appropriate for its purpose. See `docs/TOOLS.md` for complete tool reference.
+**Capabilities:**
+- Build configuration
+- CI/CD pipeline creation
+- Dependency management
+- Automated testing setup
+- Deployment automation
+- Container orchestration
+- Build optimization
+- Artifact management
 
-## 🔄 Updating Agents
+**Configuration:**
+```python
+config = {
+    "build_tools": ["Maven", "Gradle", "npm", "pip", "Docker"],
+    "platforms": ["GitHub Actions", "Jenkins", "GitLab CI", "CircleCI"]
+}
+```
 
-Check `CHANGELOG.md` for updates and new features.
+### Core Components
 
-To update agents in your project:
+#### AgentFactory
+The main factory class for creating and managing agents.
 
-```powershell
-# Manual update
-Remove-Item .\.github\agents\*.agent.md
-Copy-Item C:\path\to\agent-factory-warehouse\agents\*\*.agent.md .\.github\agents\
+**Key Methods:**
+- `create_agent(agent_type, name, config)`: Create a new agent
+- `get_agent(name)`: Retrieve an agent by name
+- `list_agents()`: List all active agents
+- `register_agent_type(agent_type, agent_class)`: Register a new agent type
+- `execute_agent_task(name, task, context)`: Execute a task with an agent
 
-# Or use script
-.\scripts\InstallAgents.ps1 -TargetRepo "C:\path\to\your\project" -InstallAll -Force
+#### WorkflowManager
+Orchestrate multiple agents in workflows.
+
+**Key Methods:**
+- `create_workflow(name, description, steps)`: Define a new workflow
+- `execute_workflow(name, agents, initial_context)`: Execute a workflow
+- `list_workflows()`: List all workflows
+- `validate_workflow(name, available_agents)`: Validate a workflow
+
+#### WorkflowBuilder
+Fluent API for building workflows.
+
+**Key Methods:**
+- `add_step(agent, task, context)`: Add a step to the workflow
+- `add_sequential_step(agent, task)`: Add a sequential step
+- `add_parallel_step(agent, task)`: Add a parallel step
+- `build()`: Build the workflow configuration
+
+### Configuration
+
+#### Loading Configuration
+
+```python
+from agent_factory.config import ConfigLoader
+
+# Load from file
+config = ConfigLoader.load_from_file("config.json")
+
+# Get default configuration
+default_config = ConfigLoader.get_default_config()
+
+# Save configuration
+ConfigLoader.save_to_file(config, "config.json", format="json")
+```
+
+#### Validating Configuration
+
+```python
+from agent_factory.config import ConfigValidator
+
+# Validate agent configuration
+validation = ConfigValidator.validate_agent_config(config, "coding")
+if validation["valid"]:
+    print("Configuration is valid!")
+else:
+    print("Errors:", validation["errors"])
+```
+
+## 🎯 Examples
+
+Run the example scripts to see the system in action:
+
+```bash
+# Basic usage example
+python examples/basic_usage.py
+
+# Workflow example
+python examples/workflow_example.py
+
+# Custom agent example
+python examples/custom_agent.py
+```
+
+## 🏗️ Architecture
+
+```
+agent_factory/
+├── core/                 # Core factory engine
+│   ├── base_agent.py    # Abstract base class for agents
+│   ├── factory.py       # Main factory class
+│   └── registry.py      # Agent type registry
+├── templates/           # Pre-built agent templates
+│   ├── coding_agent.py
+│   ├── debugging_agent.py
+│   ├── planning_agent.py
+│   └── building_agent.py
+├── workflows/           # Workflow orchestration
+│   ├── workflow_manager.py
+│   └── workflow_builder.py
+├── config/              # Configuration management
+│   ├── config_loader.py
+│   └── config_validator.py
+└── utils/               # Utility functions
+    ├── logger.py
+    └── serializer.py
+```
+
+## 🔧 Advanced Usage
+
+### Agent Serialization
+
+```python
+from agent_factory.utils import serialize_agent, deserialize_agent
+
+# Serialize an agent
+json_state = serialize_agent(agent)
+
+# Deserialize an agent
+restored_agent = deserialize_agent(json_state, CodingAgent)
+```
+
+### Workflow Templates
+
+```python
+from agent_factory.workflows import WorkflowTemplates
+
+# Use pre-defined templates
+dev_workflow = WorkflowTemplates.full_development_workflow().build()
+bug_fix_workflow = WorkflowTemplates.bug_fix_workflow().build()
+deployment_workflow = WorkflowTemplates.deployment_workflow().build()
+```
+
+### Custom Configuration
+
+```python
+# Create custom configuration
+custom_config = {
+    "factory": {
+        "name": "MyFactory",
+        "max_agents": 50
+    },
+    "agents": {
+        "coding": {
+            "languages": ["Python", "Go"],
+            "style_guide": "custom"
+        }
+    }
+}
+
+# Validate and use
+validation = ConfigValidator.validate_factory_config(custom_config)
 ```
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
+Contributions are welcome! To add a new agent type:
 
-To contribute a new agent:
+1. Create a new class inheriting from `BaseAgent`
+2. Implement `get_capabilities()` and `execute()` methods
+3. Register your agent with the factory
+4. Add tests and documentation
 
-1. Review existing agents and templates
-2. Create your agent in the appropriate `agents/` subdirectory
-3. Follow naming conventions (CamelCase)
-4. Test thoroughly
-5. Update README.md and CHANGELOG.md
-6. Submit a pull request
+## 📝 License
 
-## 📖 Additional Resources
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- [VSCode Custom Agents Documentation](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
-- [VSCode Chat Tools Reference](https://code.visualstudio.com/docs/copilot/chat/chat-tools)
-- [GitHub Copilot Documentation](https://docs.github.com/en/copilot)
+## 🎓 Use Cases
 
-## 📄 License
+- **Software Development**: Automate coding, testing, and deployment workflows
+- **Code Review**: Automated code analysis and improvement suggestions
+- **Project Planning**: Break down complex projects into manageable tasks
+- **Bug Fixing**: Systematic debugging and issue resolution
+- **CI/CD Setup**: Automated build and deployment pipeline configuration
+- **Documentation**: Generate comprehensive project documentation
+- **Learning**: Understand software development best practices through AI assistance
 
-MIT License - see [LICENSE](LICENSE) file for details.
+## 🚀 Roadmap
 
-## 🙏 Acknowledgments
+- [ ] Add more pre-built agent templates (Testing, Documentation, Security)
+- [ ] Implement parallel workflow execution
+- [ ] Add web interface for agent management
+- [ ] Support for agent communication and collaboration
+- [ ] Integration with popular AI/LLM APIs
+- [ ] Real-time agent monitoring and metrics
+- [ ] Agent marketplace for sharing custom agents
 
-Built for the VSCode and GitHub Copilot community. Inspired by software engineering best practices and the need for specialized AI agents in development workflows.
+## 📧 Contact
+
+For questions, issues, or suggestions, please open an issue on GitHub.
 
 ---
 
-**Made with ❤️ for developers who want AI agents that actually understand their workflow.**
+Made with ❤️ by the Agent Factory Warehouse team
